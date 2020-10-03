@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-
+import os
 import re
 import locale
 import datetime
+import argparse
 
 def read_file(file_path):
+    data = []
     with open(file_path) as f:
         speed = None
 
@@ -12,7 +14,7 @@ def read_file(file_path):
             line = line.rstrip()
             if speed is not None:
                 dt = datetime.datetime.strptime(line, '%a %b %d %H:%M:%S  CEST %Y')
-                print(f'{dt}, {speed}')
+                data.append(str(dt) + ',' + str(speed) + '\n')
                 speed = None
             else:
                 r = re.search('seconds = *([0-9.]+) (..)/sec$', line)
@@ -29,12 +31,28 @@ def read_file(file_path):
                     elif unit == 'kB':
                         speed = float(speed) / 8
 
+    return data
 
-def main():
-    file_information = read_file('/home/carles/hdparm.log')
+def write_csv(html_output, hdparm_speeds):
+    with open(os.path.join(html_output, 'data.csv'), 'w') as f:
+        f.writelines(hdparm_speeds)
+
+
+def main(hdparm_log, html_output):
+    hdparm_speeds = read_file(hdparm_log)
+
+    write_csv(html_output, hdparm_speeds)
+
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     locale.setlocale(locale.LC_TIME)
-    main()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('hdparm_log')
+    parser.add_argument('html_directory_output')
+
+    options = parser.parse_args()
+
+    main(options.hdparm_log, options.html_directory_output)

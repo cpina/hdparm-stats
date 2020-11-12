@@ -14,9 +14,9 @@ def read_file(file_path):
         for line in f:
             line = line.rstrip()
             if speed is not None:
-                if 'CEST' in speed:
+                if 'CEST' in line:
                     dt = datetime.datetime.strptime(line, '%a %b %d %H:%M:%S  CEST %Y')
-                elif 'CET' in speed:
+                elif 'CET' in line:
                     dt = datetime.datetime.strptime(line, '%a %b %d %H:%M:%S CET %Y')
 
                 data.append(str(dt) + ',' + str(speed) + '\n')

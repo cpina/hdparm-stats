@@ -13,7 +13,11 @@ def read_file(file_path):
         for line in f:
             line = line.rstrip()
             if speed is not None:
-                dt = datetime.datetime.strptime(line, '%a %b %d %H:%M:%S  CEST %Y')
+                if 'CEST' in speed:
+                    dt = datetime.datetime.strptime(line, '%a %b %d %H:%M:%S  CEST %Y')
+                elif 'CET' in speed:
+                    dt = datetime.datetime.strptime(line, '%a %b %d %H:%M:%S CET %Y')
+
                 data.append(str(dt) + ',' + str(speed) + '\n')
                 speed = None
             else:

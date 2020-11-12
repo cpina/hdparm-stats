@@ -7,6 +7,7 @@ import argparse
 
 def read_file(file_path):
     data = []
+    data.append('date,speed (MB/s)\n')
     with open(file_path) as f:
         speed = None
 
